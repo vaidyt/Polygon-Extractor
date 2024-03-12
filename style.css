@@ -1,0 +1,58 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  justify-content: center; /* Center the main content horizontally */
+  align-items: center; /* Center the main content vertically */
+  text-align: center;
+  flex-direction: column; /* Stack items vertically */
+}
+
+#content {
+  width: 80%;
+  max-width: 600px; /* Adjust based on your canvas size */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Ensures children are aligned to the center */
+}
+
+#controls {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+input[type="file"], #filePathDisplay {
+  flex-grow: 1;
+  margin: 0 10px;
+}
+
+#canvasContainer, #customConsole {
+  width: 100%; /* Both elements take full width of their parent */
+  display: flex;
+  justify-content: center; /* Center child elements horizontally */
+}
+
+canvas {
+  width: 100%; /* Adjust if you want the canvas to take the full width of its container */
+  max-width: 600px; /* Match the width of #content or adjust as needed */
+  border: 1px solid #000; /* Optional, for visual reference */
+}
+
+#customConsole {
+  height: 220px;
+  background-color: #1e1e1e;
+  color: #00ff00;
+  border: 1px solid #ccc;
+  padding: 10px;
+  overflow-y: auto;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  margin: 20px 0;
+}
+
+#clearButton {
+  width: 200px;
+  margin: 0;
+}

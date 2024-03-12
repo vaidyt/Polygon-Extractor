@@ -1,0 +1,21 @@
+# Ignore node_modules directory
+node_modules/
+
+# Ignore Visual Studio Code settings directory
+.vscode/
+
+# Ignore log files
+*.log
+
+# Exclude specific files or directories but include all others
+# ! means negation, so !*.js includes all .js files
+# and !folder/ includes the folder and its contents
+# Add more exclusions as needed
+# Exclude files with specific names or patterns
+# Exclude specific directories
+# Exclude files in specific directories
+
+# Include all JavaScript source files
+# Don't ignore files ending with .js unless they're in node_modules
+*.js
+!node_modules/**/*.js

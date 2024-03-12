@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Graph Loader</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.0/p5.js"></script>
+    <script type="module" src="index.mjs" defer></script>
+</head>
+<body>
+    <div id="content">
+        <div id="controls">
+            <!-- Custom button for file upload -->
+            <button id="customFileUpload">Choose File</button>
+            <!-- Hidden actual file input -->
+            <input type="file" id="fileInput" style="display: none;" />
+            <!-- Non-editable input to display file name or "NONE" -->
+            <input type="text" id="filePathDisplay" value="NONE" disabled style="text-overflow: ellipsis;" />
+        </div>
+        <div id="canvasContainer"></div>
+        <div id="customConsole"></div>
+        <!-- Clear console button -->
+        <button onclick="clearCustomConsole()" style="display: none;">Clear Console</button>
+    </div>
+</body>
+</html>
