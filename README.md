@@ -47,9 +47,9 @@ To launch the application using a live server from the command prompt, you can f
 # How to use the application?
 a. Load the graph data as a json file (from the ./Input/Good Inputs folder found in the repo).
 
-b. This Would automatically loads the graph, extracts and displays the polygons (in unique colors).
+b. This would automatically load the graph, extracts, and displays the polygons (in unique colors).
 
-c. Click anywhere inside or outside the canvas to trigger other computations (like inside-outside or neighbor info computation).
+c. Click (Left mouse click) anywhere inside or outside the canvas to trigger other computations (like inside-outside or neighbor info computation).
 
 d. For any given test point, the application gives the face it belongs to (if it is inside any of the internal faces) and the neighborhood (or adjacency) information.
 
