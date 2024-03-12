@@ -52,6 +52,7 @@ function handleFileSelect(event) {
     } else {
         // No file selected, display "NONE"
         filePathDisplay.value = "NONE";
+        console.log("Choose an input json file using the choose file button to load the graph data");
     }
 
     const reader = new FileReader();
@@ -85,7 +86,9 @@ function handleFileSelect(event) {
                 console.log('Polygon #' + polygon.id);
                 console.log(polygon.getIndices());
             });
+            console.log("Left click anywhere on or outside the canvas to begin computations");
         } catch (error) {
+            console.log("Error parsing JSON: " + error);
             console.error("Error parsing JSON:", error);
         }
     };
@@ -340,6 +343,7 @@ function mouseClicked(p) {
         console.log("Point is outside");
     }
     console.log("===========================================");
+    console.log("Pick a new point...");
 
 
 }
