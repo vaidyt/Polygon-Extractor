@@ -45,7 +45,7 @@ To launch the application using a live server from the command prompt, you can f
 7. That's it! You should now be able to use the Polygon-Extractor Application.
 
 # How to use the application?
-a. Load the graph data as a json file (from the input folders found in the repo).
+a. Load the graph data as a json file (from the ./Input/Good Inputs folder found in the repo).
 
 b. This Would automatically loads the graph, extracts and displays the polygons (in unique colors).
 
@@ -55,5 +55,8 @@ d. For any given test point, the application gives the face it belongs to (if it
 
 # Website Endpoint
 [https://vaidyt.github.io/Polygon-Extractor/](https://vaidyt.github.io/Polygon-Extractor/)
+
+# Unit Tests
+* Some basic JUnit tests are included (in __teests__) to test polygon extraction, inside-outside tests, and neighbor information algorithms.
 
 
