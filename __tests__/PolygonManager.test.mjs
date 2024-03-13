@@ -156,4 +156,38 @@ describe('PolygonManager', () => {
 
   });
 
+  describe('PolygonManager', () => {
+    test('Added as part of bug fix for inside or outside of non-convex polygons', () => {
+      const geometry = {
+        "vertices": [
+          [1, 1], [4, 1], [6, 2], [6, 4], [4, 5], [1, 5], [0, 4], [0, 2],
+          [2, 2], [3, 2], [3, 4], [2, 4]
+        ],
+        "edges": [
+          [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 0],
+          [7, 8], [8, 9], [9, 1], [2, 10], [10, 11], [11, 3], [8, 11], [9, 10]
+        ]
+      };
+  
+      const polygonManager = new PolygonManager(geometry.vertices, geometry.edges);
+      const polygons = polygonManager.extractFaces();
+
+      // Test points inside the polygons
+      expect(polygons[0].isPointInside([1, 1.99])).toEqual(true); // Point inside the first polygon
+      expect(polygons[0].isPointInside([1, 1])).toEqual(true); // Point on the boundary of the first polygon 
+      expect(polygons[0].isPointInside([0, 0])).toEqual(false); // Point outside the first polygon
+
+      expect(polygons[1].isPointInside([5, 5])).toEqual(false); // Point outside 
+      expect(polygons[1].isPointInside([3, 2])).toEqual(false); // Point outside
+      expect(polygons[1].isPointInside([6, 2])).toEqual(false); // Point outside
+      expect(polygons[1].isPointInside([1, 3])).toEqual(true); // Point on the boundary of the second polygon
+
+  
+      
+      
+      
+    });
+  });
+  
+
 });

@@ -64,18 +64,55 @@ export default class Polygon {
     //    point may not be inside of a face. Include tests (with text descriptions of the input data) demonstrating that it works.
     //    Comment your code with specifics about the computational complexity of your implementation.
     //    Worst case complexity - Linear in number of edges (or vertices) of the polygon
-    //    When we have n-polygons then it would be O(E) (as we need to traverse every edge of the graph)
+    //    When we have n-polygons then it would be O(V) (as we need to traverse every vertex of the graph)
+    
+    // Ray casting algorithm
     isPointInside(point) {
-        for (let i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
-            if (!this.isLeft(point, this.vertices[j], this.vertices[i])) {
-                return false;
+        let intersectCount = 0;
+        const verticesCount = this.vertices.length;
+    
+        for (let i = 0; i < verticesCount; i++) {
+            const vertex1 = this.vertices[i];
+            const vertex2 = this.vertices[(i + 1) % verticesCount];
+    
+            // Check if the point is on the same horizontal line as the current edge
+            if ((vertex1[1] <= point[1] && vertex2[1] > point[1]) || (vertex1[1] > point[1] && vertex2[1] <= point[1])) {
+                // Calculate the x-coordinate of the intersection point of the ray with the edge
+                const intersectX = (point[1] - vertex1[1]) / (vertex2[1] - vertex1[1]) * (vertex2[0] - vertex1[0]) + vertex1[0];
+                
+                // Check if the intersection point coincides with the test point
+                
+                if (point[0] === intersectX) {
+                    return true; // Point lies on the edge, consider it inside
+                }
+    
+                // If the intersection point lies to the right of the test point, increment intersectCount
+                if (point[0] < intersectX) {
+                    intersectCount++;
+                }
             }
         }
-        return true;
+    
+        // If the number of intersections is odd, the point is inside the polygon
+        return intersectCount % 2 === 1;
     }
+    
 
-    // O(1)
+     // O(1)
     isLeft(point, vertex1, vertex2) {
-        return ((vertex2[0] - vertex1[0]) * (point[1] - vertex1[1]) - (point[0] - vertex1[0]) * (vertex2[1] - vertex1[1])) >= 0;
+        return ((vertex2[0] - vertex1[0]) * (point[1] - vertex1[1]) - (point[0] - vertex1[0]) * (vertex2[1] - vertex1[1])) > 0;
     }
+    
+    isPointInside_2(point) {
+        let inside = false;
+    
+        for (let i = 0, j = this.vertices.length - 1; i < this.vertices.length; j = i++) {
+            if (this.isLeft(point, this.vertices[j], this.vertices[i])) {
+                inside = !inside;
+            }
+        }
+    
+        return inside;
+    }
+   
 }
