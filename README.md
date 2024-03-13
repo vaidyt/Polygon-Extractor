@@ -45,13 +45,13 @@ To launch the application using a live server from the command prompt, you can f
 7. That's it! You should now be able to use the Polygon-Extractor Application.
 
 # How to use the application?
-a. Load the graph data as a json file (from the ./Input/Good Inputs folder found in the repo).
+a. Load the graph data as a JSON file ((from the ./Input/Good Inputs folder found in the repo).) by clicking on "Choose File" button.
 
-b. This would automatically load the graph, extracts, and displays the polygons (in unique colors).
+b. This would automatically load the graph and extract/display the polygons (in unique colors).
 
 c. Click (Left mouse click) anywhere inside or outside the canvas to trigger other computations (like inside-outside or neighbor info computation).
 
-d. For any given test point, the application gives the face it belongs to (if it is inside any of the internal faces) and the neighborhood (or adjacency) information.
+d. For any given test point, the application gives the face it belongs to (if it is inside any of the internal faces) and the neighborhood (or adjacency) information in the console window below the canvas.
 
 # Website Endpoint
 [https://vaidyt.github.io/Polygon-Extractor/](https://vaidyt.github.io/Polygon-Extractor/)
