@@ -70,33 +70,44 @@ export default class Polygon {
     isPointInside(point) {
         let intersectCount = 0;
         const verticesCount = this.vertices.length;
-    
+
+        // Check if the point coincides with any of the vertices
+        for (let vertex of this.vertices) {
+            if (point[0] === vertex[0] && point[1] === vertex[1]) {
+                return true; // Point is exactly at one of the vertices, consider it inside
+            }
+        }
+
         for (let i = 0; i < verticesCount; i++) {
             const vertex1 = this.vertices[i];
             const vertex2 = this.vertices[(i + 1) % verticesCount];
-    
+
+            // Check for a horizontal edge and point directly on this edge
+            if (vertex1[1] === vertex2[1] && vertex1[1] === point[1] &&
+                (point[0] >= Math.min(vertex1[0], vertex2[0]) && point[0] <= Math.max(vertex1[0], vertex2[0]))) {
+                return true; // Point is on a horizontal edge, consider it inside
+            }
+
             // Check if the point is on the same horizontal line as the current edge
             if ((vertex1[1] <= point[1] && vertex2[1] > point[1]) || (vertex1[1] > point[1] && vertex2[1] <= point[1])) {
                 // Calculate the x-coordinate of the intersection point of the ray with the edge
                 const intersectX = (point[1] - vertex1[1]) / (vertex2[1] - vertex1[1]) * (vertex2[0] - vertex1[0]) + vertex1[0];
-                
+
                 // Check if the intersection point coincides with the test point
-                
                 if (point[0] === intersectX) {
                     return true; // Point lies on the edge, consider it inside
                 }
-    
+
                 // If the intersection point lies to the right of the test point, increment intersectCount
                 if (point[0] < intersectX) {
                     intersectCount++;
                 }
             }
         }
-    
+
         // If the number of intersections is odd, the point is inside the polygon
         return intersectCount % 2 === 1;
     }
-    
 
      // O(1)
     isLeft(point, vertex1, vertex2) {

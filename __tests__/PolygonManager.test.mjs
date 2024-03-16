@@ -174,6 +174,7 @@ describe('PolygonManager', () => {
 
       // Test points inside the polygons
       expect(polygons[0].isPointInside([1, 1.99])).toEqual(true); // Point inside the first polygon
+      expect(polygons[0].isPointInside([1, 2.0])).toEqual(true); // Point inside the first polygon
       expect(polygons[0].isPointInside([1, 1])).toEqual(true); // Point on the boundary of the first polygon 
       expect(polygons[0].isPointInside([0, 0])).toEqual(false); // Point outside the first polygon
 
