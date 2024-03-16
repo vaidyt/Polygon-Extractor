@@ -197,14 +197,14 @@ export default class PolygonManager {
     //                 arrays of face ids until all faces have been visited. Include tests (with text descriptions of the input data)
     //                 demonstrating that it works.
     // Builds a map relating each face to its neighboring faces.
-    // Complexity: O(F*(V^2 + VE)) = O((V+E)*(V^2 + VE)) = O(V^3 + V^2E + VE^2)
+    // Complexity: O(F*(V*C + E*C)) ~= O(V*F*C + E*F*C) = O((V^2 + VE)); Here, we are using F*C = V!
     static buildFaceNeighborsMap(polygons, startFaceId) {
         const faceNeighborsMap = new Map();
         const queue = [startFaceId];
         while (queue.length > 0) { // O(F) = O(V+E)
-            const currentFaceId = queue.shift();
+            const currentFaceId = queue.shift(); // Here, I am assuming this is constant time but this is not as we are using arrays here!
             if (!faceNeighborsMap.has(currentFaceId)) {
-                const neighbors = PolygonManager.findNeighboringFaces(polygons, currentFaceId); // O(V^2 + VE)
+                const neighbors = PolygonManager.findNeighboringFaces(polygons, currentFaceId); // O(V*C + E*C)
                 faceNeighborsMap.set(currentFaceId, neighbors);
                 neighbors.forEach(neighborId => {
                     if (!faceNeighborsMap.has(neighborId)) {
@@ -222,25 +222,53 @@ export default class PolygonManager {
     //      integer or string. Include tests (with text descriptions of the input data) demonstrating that it works. Comment your
     //      code with specifics about the computational complexity of your implementation.
     // Identifies neighboring faces for a given face.
-    // Complexity: O(V^2 + VE), due to iterating through polygons and checking for shared edges.
+    // Complexity: O(F*C) = O(V*C + E*C), due to iterating through polygons and checking for shared edges; 
+    //             C is the average number vertices per internal face.
     static findNeighboringFaces(polygons, queryFaceId) {
+        // Retrieve the query polygon using its ID
         let query_polygon = polygons[queryFaceId];
+        // getIndices returns an array of vertex indices for the query polygon
         const queryFaceVertexIndices = query_polygon.getIndices();
-        polygons.forEach((polygon, i) => { // O(V+E) using Euler's formula for planar graph
-            if (i === queryFaceId) return; // Skip self.
-            const currentFaceVertexIndices = polygon.getIndices();
-            for (let j = 0; j < currentFaceVertexIndices.length; j++) { // O(V)
+
+        // Create a map for quick lookup of vertex positions in the query polygon
+        // Complexity: O(C), where C is the average number of vertices per face
+        const indexLookup = new Map();
+        queryFaceVertexIndices.forEach((index, position) => {
+            indexLookup.set(index, position);
+        });
+
+        // Iterate over all polygons to identify neighboring faces
+        // Complexity: O(F*C) for this loop, where F is the total number of faces
+        polygons.forEach((polygon, i) => {
+            if (i === queryFaceId) return; // Skip the query polygon itself
+
+            const currentFaceVertexIndices = polygon.getIndices(); // Already an array
+
+            // Iterate through each vertex of the current polygon to check for shared edges
+            // Complexity: O(C), iterating through vertices of the current polygon
+            for (let j = 0; j < currentFaceVertexIndices.length; j++) {
                 const currentVertex = currentFaceVertexIndices[j];
                 const nextVertex = currentFaceVertexIndices[(j + 1) % currentFaceVertexIndices.length];
-                const index1 = queryFaceVertexIndices.indexOf(currentVertex);
-                const index2 = queryFaceVertexIndices.indexOf(nextVertex);
-                if ((index1 !== -1 && queryFaceVertexIndices[(index1 + 1) % queryFaceVertexIndices.length] === nextVertex) ||
-                    (index2 !== -1 && queryFaceVertexIndices[(index2 + 1) % queryFaceVertexIndices.length] === currentVertex)) {
-                    query_polygon.addNeighbor(i);
-                    break; // Found a neighboring face.
+
+                // Use the map for O(1) lookup to check if both the current and next vertices are in the query polygon
+                if (indexLookup.has(currentVertex) && indexLookup.has(nextVertex)) {
+                    // Calculate positions to ensure the vertices are consecutive in the query polygon
+                    const pos1 = indexLookup.get(currentVertex);
+                    const pos2 = indexLookup.get(nextVertex);
+
+                    // Check for consecutive positions, considering wrap-around, to ensure a shared edge
+                    if ((pos1 !== undefined && pos2 !== undefined) && 
+                        ((pos1 + 1) % queryFaceVertexIndices.length === pos2 ||
+                         (pos2 + 1) % queryFaceVertexIndices.length === pos1)) {
+                        query_polygon.addNeighbor(i);
+                        break; // Found a neighboring face, no need to check further
+                    }
                 }
             }
         });
+
+        // Return the set of neighbors for the query polygon
         return query_polygon.neighbors;
     }
+    
 }
