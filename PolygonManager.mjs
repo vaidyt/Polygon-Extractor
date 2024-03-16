@@ -110,18 +110,19 @@ export default class PolygonManager {
         let v3 = -1;
         let angle = Number.MAX_VALUE;
         for (let i = 0; i < potentialEdgeIndices.length; i++) {
-            let thisV3 = potentialEdgeIndices[i];
-            let thisWedgeAngle = this.angleBetweenEdgesClockwise(this._vertices[v1], this._vertices[v2], this._vertices[thisV3]);
+            let v3_i = potentialEdgeIndices[i];
+            let thisWedgeAngle = this.angleBetweenEdgesClockwise(this._vertices[v1], this._vertices[v2], this._vertices[v3_i]);
             if (thisWedgeAngle < angle) {
                 angle = thisWedgeAngle;
-                v3 = thisV3;
+                v3 = v3_i;
             }
         }
         return v3;
     }
 
     // Extracts the vertices forming a face starting from an edge defined by two vertices.
-    // Complexity: Potentially O(V*E), as it traverses vertices and edges to outline a face.
+    // Complexity:  O(V*E), to traverse all vertices and edges to extract all faces (or regions) in the graph.
+    // Note: Extracting a single face is not O(V*E) and is a lot faster.
     getFace(v1, v2) {
         let faceIndices = [v1, v2];
         this._adjacencyMatrix[v1][v2] = 0; // Mark as traversed.
@@ -134,7 +135,9 @@ export default class PolygonManager {
             }
             let v3 = this.getNextFaceVertex(v1, v2, potentialEdgeIndices); // O(V)
             if (v3 === v1 || v3 === -1) {
-                this._adjacencyMatrix[v2][v3] = 0;
+                if(v3 !== -1 ) {
+                    this._adjacencyMatrix[v2][v3] = 0;
+                }
                 break;
             }
             faceIndices.push(v3);
@@ -167,17 +170,17 @@ export default class PolygonManager {
     // This method implements the algorithm given by:
     // Z-C Shih in "A systolic algorithm for extracting planar regions from a planar graph",
     // Computer Vision Graphics and Image Processing (1989).
-    // Complexity: O(VE^2 + V^2E) = O((F+V+E)*V)  // Also, see "An optimal algorithm for extracting planar regions of a plane graph",
+    // Complexity: O(V^2 + V*E) = O((F+V+E)*V)  // Also, see "An optimal algorithm for extracting planar regions of a plane graph",
     //                                            // by Jiang X H and Bunke H (1993) for a detailed analysis of the algorithm
     extractFaces() {
         let faces = [];
         let polygons = [];
         // this.printAdjacencyMatrix();
         let edge = this.findVertexWithEdge();
-        while (edge) { // O(E)
+        while (edge) {
             let v1 = edge.startVertex, v2 = edge.midVertex;
             
-            let nextFaceIndices = this.getFace(v1, v2); // O(V*E)
+            let nextFaceIndices = this.getFace(v1, v2); // O(V*E) - Note this is takes in to account the total complexity to extract all faces.
             if (nextFaceIndices && nextFaceIndices.length > 2) {
                 let faceVertices = nextFaceIndices.map(index => this._vertices[index]); // O(1)
                 let polygon = new Polygon(faceVertices, nextFaceIndices);
